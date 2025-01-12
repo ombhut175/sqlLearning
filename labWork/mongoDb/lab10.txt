@@ -28,20 +28,128 @@ Part – A (Use collection “Student” created in Lab-9)
 14. Add a new field premiumUser and to true for users older than 30.
     db.student.updateMany({ years: { $gt: 30 } }, { $set: { premiumUser: true } })
 15. Set isActive to true for 'Jane'.
+    db.student.updateOne({name : "Jane"},{$set : {isActive : true}})
 16. Update isActive field of 'Lucy' to false.
+    db.student.updateOne({name : "Lucy"},{$set : {isActive : false}})
 17. Delete a document of 'Nick' from the collection.
+    db.student.deleteOne({name : "Nick"})
 18. Delete all students who are inactive (isActive = false).
+    db.student.deleteMany({isActive : false})
 19. Delete all students who live in 'New York'.
+    db.student.deleteMany({city : "New York"})
 20. Delete all the students aged above 35.
+    db.student.deleteMany({age : {$gte : 35}})
 21. Delete a student named ''Olivia'' from the collection.
+    db.student.deleteOne({name : "Olivia"})
 22. Delete all the students whose age is below 25.
+    db.student.deleteMany({years : {$lt : 25}})
 23. Delete the first student whose isActive field is true.
+    db.student.deleteOne({isActive : true})
 24. Delete all students from 'Los Angeles'.
+    db.student.deleteMany({country : "Los Angeles"})
 25. Delete all students who have city field missing.
+    db.student.deleteMany({city : {$exists : false}})
 26. Rename 'city' field to 'location' for all documents.
+    db.student.updateMany({},{$rename : {"city":"location"}})
 27. Rename the name field to FullName for 'John'.
+    db.student.updateMany({},{$rename : {"name":"FullName"}})
 28. Rename the isActive field to status for all documents.
+    db.student.updateMany({},{$rename : {"isActive" : "status"}})
 29. Rename age to yearsOld for everyone from 'San Francisco' student only.
+    db.student.updateMany({location : "San Diego"},{$rename : {"years" : "yearsOld"}})
 30. Create a Capped Collection named “Employee” as per follows:
 a. Ecode and Ename are compulsory fields
 b. Datatype of EID is int, Ename is string, Age is int and City is string
+    db.createCollection("Employee",{
+            capped:true,
+            size:5120,
+            max:100,
+            validator:{
+            $jsonSchema:{
+            bsonType:"object",
+            required:["Ecode","Ename"],
+            properties:{
+            Ecode:{bsonType:"int"},
+            Ename:{bsonType:"string"},
+            Age:{bsonType:"int"},
+            City:{bsonType:"string"},
+
+    }
+    }
+    }
+    })
+
+
+PART B
+
+1. Display Female students and belong to Rajkot city.
+    db.student_data.find({GENDER : "Female",CITY:"Rajkot"})
+2. Display students not studying in 3rd sem.
+    db.student_data.find({SEM : {$ne : 3}})
+3. Display students whose city is Jamnagar or Baroda. (use: IN)
+    db.student_data.find({CITY : {$in : ["Jamnagar","Baroda"]}})
+4. Display first 2 students names who lives in Baroda.
+    db.student_data.find({CITY : "Baroda"}).limit(2)
+5. Display Male students who studying in 3rd sem.
+    db.student_data.find({GENDER : "Male" , SEM : 3})
+6. Display sname and city and fees of those students whose roll no is less than 105.
+    db.student_data.find({ROLLNO : {$lt : 105}},{SNAME:1,CITY:1,FEES:1,_id:0})
+7. Update City of all students from 'Jamnagar' City and Department as 'CE' to 'Surat'.
+    db.student_data.updateMany({CITY : "Jamnagar",DEPARTMENT : "CE"},{$set : {CITY:"Surat"}})
+
+8. Increase Fees by 500 where the Gender is not 'Female'. (Use: Not)
+    db.student_data.updateMany({GENDER : {$not : {$eq : "Female"}}},{$inc : {FEES:500}})
+
+9. Set the Department of all students from 'EE' and in Sem 3 to 'Electrical'.
+    db.student_data.updateMany({DEPARTMENT:"EE",SEM : 3},{$set : {DEPARTMENT : "Electrical"}})
+
+10. Update the Fees of students in 'Rajkot' who are male.
+    db.student_data.updateMany({CITY:"Rajkot",GENDER : "Male"},{$inc : {FEES:1}})
+
+11. Change City to 'Vadodara' for students in Sem 5 and with fees less than 10000.
+    db.student_data.updateMany({SEM:5,FEES :{$lt:10000}},{$set : {CITY : "Vadodra"}})
+
+12. Delete all students where the City is 'Ahmedabad' or GENDER is 'Male'.
+    db.student_data.deleteMany({$or : [{CITY : "Ahmedabad"},{GENDER : "Male"}]})
+
+13. Delete students whose Rollno is not in the list [101, 105, 110].
+    db.student_data.deleteMany({ROLLNO:{$nin : [101,105,110]}})
+
+14. Delete students from the 'Civil' department who are in Sem 5 or Sem 7.
+    db.student_data.deleteMany({DEPARTMENT:"Civil" , SEM : {$in : [5,7]}})
+
+15. Delete all students who are not in the cities 'Rajkot', 'Baroda', or 'Jamnagar'.
+    db.student_data.deleteMany({CITY : {$nin : ["Rajkot","Baroda","Jamnagar"]}})
+
+16. Delete students whose Rollno is between 105 and 108.
+    db.student_data.deleteMany({ROLLNO : {$gte : 105,$lte : 108}})
+
+17. Rename the City field to LOCATION for all students.
+    db.student_data.updateMany({},{$rename : {"CITY" : "LOCATION"}})
+
+18. Rename the Department field to Branch where the Fees is less than 10000.
+    db.student_data.updateMany({FEES : {$lte:10000}},{$rename : {"DEPARTMENT" : "BRANCH"}})
+
+19. Rename Sname to Fullname for students with Rollno in [106, 107, 108].
+    db.student_data.updateMany({ROLLNO : {$in : [106,107,108]}},{$rename : {"SNAME" : "FULLNAME"}})
+
+20. Rename Fees to Tuition_Fees for all students with Fees greater than 9000.
+    db.student_data.updateMany({FEES : {$gt : 9000}},{$rename : {"FEES" : "TUTION_FEES"}})
+
+21. Rename Department to Major where the Fees is less than 15000 and Gender is 'Female'.
+    db.student_data.updateMany({FEES : {$lt:15000},GENDER:"Female"},{$rename : {"BRANCH" : "MAJOR"}})
+
+22. Rename City to Hometown for all students whose SEM is 3 and Department is not 'Mechanical'.
+    db.student_data.updateMany({SEM : 3 , DEPARTMENT : {$ne : "MECHANICAL"}},{$rename : {"LOCATION" : "HOMETOWN"} })
+
+
+
+Part – C
+1. Create a capped collection named” logs” with a maximum size of 100 KB and a maximum of 10
+documents. 
+
+    db.createCollection("logs", {
+    capped: true,  // Enables capped collection
+    size: 102400,  // Maximum size in bytes (100 KB = 102400 bytes)
+    max: 10        // Maximum number of documents
+});
