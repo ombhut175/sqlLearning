@@ -214,5 +214,42 @@ END
 
 -- 13. Write a function which accepts two parameters year & month in integer and returns total days each
 -- year.
+CREATE OR ALTER FUNCTION FN_DAYS_OF_MONTH_YEAR(
+    @YEAR INT,
+    @MONTH INT
+)
+RETURNS INT
+AS
+BEGIN
+    RETURN DAY(EOMONTH(DATEFROMPARTS(@YEAR,@MONTH,1)));
+END
+
+SELECT DBO.FN_DAYS_OF_MONTH_YEAR(2024,2);
+
 -- 14. Write a function which accepts departmentID as a parameter & returns a detail of the persons.
+
+SELECT * FROM Person;
+
+CREATE OR ALTER FUNCTION FN_DETAIL_FROM_DEPTID(@DEPARTMENTID INT)
+RETURNS TABLE
+AS
+RETURN(
+    SELECT * FROM Person
+    WHERE DepartmentID = @DEPARTMENTID
+)
+
+SELECT * FROM FN_DETAIL_FROM_DEPTID(2);
+
 -- 15. Write a function that returns a table with details of all persons who joined after 1-1-1991.
+
+CREATE OR ALTER FUNCTION FN_DETAILS_AFTER_DATE()
+RETURNS TABLE
+AS
+    RETURN(
+        SELECT * FROM Person
+        WHERE JoiningDate > '1991/1/1'
+    )
+
+SELECT * FROM FN_DETAILS_AFTER_DATE();
+
+SELECT EOMONTH('2025/01/13') AS MONTH_END;
