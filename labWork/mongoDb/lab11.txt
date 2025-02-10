@@ -73,3 +73,70 @@
 
 28. Find employees whose names start with any uppercase letter followed by any lowercase letter.
     db.employee.find({ENAME : /^[A-Z][a-z]/})
+
+
+PART B:-
+
+1. Display documents where sname start with K.
+2. Display documents where sname starts with Z or D.
+    db.Student.find({SNAME : /^[zd]/i})
+
+3. Display documents where city starts with A to R.
+    db.Student.find({CITY : /[a-r]/i})
+
+4. Display students’ info whose name start with P and ends with i.
+5. Display students’ info whose department name starts with ‘C’.
+6. Display name, sem, fees, and department whose city contains ‘med’ as three letters somewhere in city name.
+    db.Student.find({CITY : /med/i},{_id:0,SNAME:1,SEM:1,FEES:1,DEPARTMENT:1})
+
+7. Display name, sem, fees, and department who does not belongs to city Rajkot or Baroda.
+    db.Student.find({CITY : {$not : /^(rajkot|baroda)$/i}},{_id:0,CITY:1,SNAME:1,SEM:1,FEES:1,DEPARTMENT:1})
+
+8. Find students whose names start with 'K' and are followed by any character.
+    db.Student.find({SNAME : /^k/i})
+
+9. Find students whose names end with 'a'.
+    db.Student.find({SNAME : /a$/i})
+
+10. Find students whose names contain 'ri'. (case-insensitive)
+    db.Student.find({SNAME : /ri/i})
+
+
+Part – C
+1. Find students whose names start with a vowel (A, E, I, O, U).
+2. Find students whose CITY ends with 'pur' or 'bad'.
+    db.Student.find({CITY : /(pur|bad)$/i})
+
+3. Find students whose FEES starts with '1'.
+
+4. Find students whose SNAME starts with 'K' or 'V'.
+
+5. Find students whose CITY contains exactly five characters.
+    db.Student.find({CITY : /^.{5}$/})
+
+6. Find students whose names do not contain the letter 'e'.
+    db.Student.find({SNAME : {$not: /e/i}})
+
+7. Find students whose CITY starts with 'Ra' and ends with 'ot'.
+    db.Student.find({CITY : /^Ra.*ot$/})
+
+8. Find students whose names contain exactly one vowel.
+    db.Student.find({SNAME : /[^aeiou]*[aeiou][^aeiou]*/i})
+
+9. Find students whose names start and end with the same letter.
+    db.Student.find({SNAME : /^([a-z]).*\1$/i})
+
+        db.Student.find(
+    { SNAME: /^([a-zA-Z]).*\1$/ },
+    { _id: 0, SNAME: 1, SEM: 1, FEES: 1, DEPARTMENT: 1 }
+    )
+
+
+10. Find students whose DEPARTMENT starts with either 'C' or 'E'.
+    db.Student.find({DEPARTMENT : /^[ce]/i})
+
+11. Find students whose SNAME has exactly 5 characters.
+    db.Student.find({SNAME : /^.{5}$/i})
+
+12. Find students whose GENDER is Female and CITY starts with 'A'.
+    db.Student.find({GENDER:/(female)/i , CITY: /^a/i})
